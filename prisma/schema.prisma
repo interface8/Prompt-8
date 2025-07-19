@@ -7,9 +7,57 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  isPremium Boolean  @default(false)
+  prompts   Prompt[]
+  favorites Favorite[]
+  comments  Comment[]
+  createdAt DateTime @default(now())
+}
+
+model Prompt {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  content     String
+  category    String
+  price       Float?
+  isPrivate   Boolean  @default(false)
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  comments    Comment[]
+  favorites   Favorite[]
+  createdAt   DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  user      User     @relation(fields: [userId], references: [id])
+  prompt    Prompt   @relation(fields: [promptId], references: [id])
+  userId    String
+  promptId  String
+  createdAt DateTime @default(now())
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  prompt    Prompt   @relation(fields: [promptId], references: [id])
+  userId    String
+  promptId  String
+  createdAt DateTime @default(now())
 }
