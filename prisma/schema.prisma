@@ -19,6 +19,7 @@ datasource db {
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
+  password  String?  
   name      String?
   image     String?
   isPremium Boolean  @default(false)
