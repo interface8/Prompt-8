@@ -14,6 +14,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  PROMPTER
+}
 
 model User {
   id        String   @id @default(cuid())
@@ -22,10 +26,13 @@ model User {
   name      String?
   image     String?
   isPremium Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+
+  role      Role     @default(PROMPTER)
   prompts   Prompt[]
   favorites Favorite[]
   comments  Comment[]
-  createdAt DateTime @default(now())
 }
 
 model Prompt {
@@ -34,6 +41,9 @@ model Prompt {
   title       String
   content     String
   category    String
+  typeId      String
+  type        PromptType  @relation("PromptToType", fields: [typeId], references: [id])
+  isSellable  Boolean     @default(false)
   price       Float?
   isPrivate   Boolean  @default(false)
   user        User     @relation(fields: [userId], references: [id])
@@ -41,6 +51,19 @@ model Prompt {
   comments    Comment[]
   favorites   Favorite[]
   createdAt   DateTime @default(now())
+
+  promptTypes PromptType[] @relation("PromptToPromptTypes")
+}
+
+model PromptType {
+  id        String       @id @default(uuid())
+  name      String
+  parentId  String?      
+  parent    PromptType?  @relation("PromptCategoryParent", fields: [parentId], references: [id])
+  children  PromptType[] @relation("PromptCategoryParent")
+
+  prompts   Prompt[] @relation("PromptToType")
+  promptList Prompt[] @relation("PromptToPromptTypes")
 }
 
 model Comment {
