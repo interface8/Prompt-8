@@ -9,7 +9,7 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "seed": "tsx .prisma/seed.ts",
-    "prepare": "husky install",
+    "prepare": "husky",
     "format": "prettier --check \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
     "format:fix": "prettier --write \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
     "tsc": "tsc --noEmit"
