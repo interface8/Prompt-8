@@ -1,19 +1,19 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
-import type { NextAuthOptions } from "next-auth";
-import prisma from "./prisma";
-import bcrypt from "bcryptjs";
-import { Role } from "@prisma/client"; // Make sure your Role enum is exported
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import type { NextAuthOptions } from 'next-auth';
+import prisma from './prisma';
+import bcrypt from 'bcryptjs';
+import { Role } from '@prisma/client'; // Make sure your Role enum is exported
 
-import { DefaultSession } from "next-auth";
+import { DefaultSession } from 'next-auth';
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
     user: {
       id: string;
       role: Role;
-    } & DefaultSession["user"];
+    } & DefaultSession['user'];
   }
 }
 
@@ -22,19 +22,19 @@ export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     }),
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: credentials.email }
         });
 
         if (!user || !user.password) return null;
@@ -47,20 +47,21 @@ export const authOptions: NextAuthOptions = {
         if (!isValid) return null;
 
         return user;
-      },
-    }),
+      }
+    })
   ],
   session: {
-    strategy: "jwt",
+    strategy: 'jwt'
   },
   pages: {
-    signIn: "/auth/signin",
+    signIn: '/auth/signin'
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         // Assign role from user if available
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         token.role = (user as any).role || Role.PROMPTER;
       }
       return token;
@@ -71,7 +72,7 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as Role;
       }
       return session;
-    },
+    }
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET
 };

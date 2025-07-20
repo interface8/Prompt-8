@@ -1,50 +1,51 @@
-"use client";
+'use client';
 
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-export function useAuth(type: "signin" | "signup") {
+export function useAuth(type: 'signin' | 'signup') {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleAuth = async (
     form: { email: string; password: string; name?: string },
-    provider: "credentials" | "google" = "credentials"
+    provider: 'credentials' | 'google' = 'credentials'
   ) => {
     setLoading(true);
-    setError("");
+    setError('');
 
     try {
-      if (provider === "google") {
-        await signIn("google", { callbackUrl: "/" });
+      if (provider === 'google') {
+        await signIn('google', { callbackUrl: '/' });
         return;
       }
 
-      if (type === "signup") {
-        const res = await fetch("/api/auth/signup", {
-          method: "POST",
+      if (type === 'signup') {
+        const res = await fetch('/api/auth/signup', {
+          method: 'POST',
           body: JSON.stringify(form),
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' }
         });
 
         if (!res.ok) {
           const data = await res.json();
-          throw new Error(data.error || "Failed to sign up");
+          throw new Error(data.error || 'Failed to sign up');
         }
 
-        router.push("/signin");
+        router.push('/signin');
       } else {
-        const res = await signIn("credentials", {
+        const res = await signIn('credentials', {
           redirect: false,
           email: form.email,
-          password: form.password,
+          password: form.password
         });
 
         if (res?.error) throw new Error(res.error);
-        router.push("/");
+        router.push('/');
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {

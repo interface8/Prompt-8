@@ -1,7 +1,0 @@
-{
-  "!(.eslintrc.js)*.{ts,tsx,js,jsx}": [
-    "npm run tsc",
-    "npm run format:fix",
-    "npm run lint:staged"
-  ]
-}
