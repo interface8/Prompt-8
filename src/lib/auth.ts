@@ -1,10 +1,12 @@
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from 'next-auth/providers/github';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import type { NextAuthOptions } from 'next-auth';
 import prisma from './prisma';
 import bcrypt from 'bcryptjs';
 import { Role } from '@prisma/client'; // Make sure your Role enum is exported
+import { env } from './env';
 
 import { DefaultSession } from 'next-auth';
 
@@ -21,8 +23,12 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET
+    }),
+    GitHubProvider({
+      clientId: env.GITHUB_ID,
+      clientSecret: env.GITHUB_SECRET,
     }),
     CredentialsProvider({
       name: 'Credentials',
@@ -54,7 +60,7 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt'
   },
   pages: {
-    signIn: '/auth/signin'
+    signIn: '/signin'
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -74,5 +80,5 @@ export const authOptions: NextAuthOptions = {
       return session;
     }
   },
-  secret: process.env.NEXTAUTH_SECRET
+  secret: env.NEXTAUTH_SECRET
 };

@@ -11,7 +11,7 @@ export function useAuth(type: 'signin' | 'signup') {
 
   const handleAuth = async (
     form: { email: string; password: string; name?: string },
-    provider: 'credentials' | 'google' = 'credentials'
+    provider: 'credentials' | 'google' | 'github' = 'credentials'
   ) => {
     setLoading(true);
     setError('');
@@ -19,6 +19,11 @@ export function useAuth(type: 'signin' | 'signup') {
     try {
       if (provider === 'google') {
         await signIn('google', { callbackUrl: '/' });
+        return;
+      }
+
+      if (provider === 'github') {
+        await signIn('github', { callbackUrl: '/' });
         return;
       }
 
