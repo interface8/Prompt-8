@@ -24,11 +24,23 @@ export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     }),
     GitHubProvider({
       clientId: env.GITHUB_ID,
       clientSecret: env.GITHUB_SECRET,
+      authorization: {
+        params: {
+          scope: "read:user user:email"
+        }
+      }
     }),
     CredentialsProvider({
       name: 'Credentials',
@@ -60,22 +72,48 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt'
   },
   pages: {
-    signIn: '/signin'
+    signIn: '/signin',
+    error: '/signin' // Redirect to signin page on error
   },
+  debug: env.NODE_ENV === 'development',
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account, profile }) {
+      // Allow OAuth sign-ins
+      if (account?.provider === 'google' || account?.provider === 'github') {
+        return true;
+      }
+      
+      // Allow credentials sign-in
+      if (account?.provider === 'credentials') {
+        return true;
+      }
+      
+      return false;
+    },
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
         // Assign role from user if available
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         token.role = (user as any).role || Role.PROMPTER;
       }
+      
+      // Store OAuth account info
+      if (account) {
+        token.accessToken = account.access_token;
+        token.provider = account.provider;
+      }
+      
       return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as Role;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (session as any).accessToken = token.accessToken;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (session as any).provider = token.provider;
       }
       return session;
     }
