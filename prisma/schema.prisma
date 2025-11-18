@@ -9,21 +9,33 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  password      String?
-  name          String?
-  image         String?
-  emailVerified DateTime?
-  isPremium     Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  role          Role      @default(PROMPTER)
-  
-  accounts      Account[]
-  sessions      Session[]
-  comments      Comment[]
-  favorites     Favorite[]
-  prompts       Prompt[]
+  id             String        @id @default(cuid())
+  email          String        @unique
+  password       String?
+  name           String?
+  image          String?
+  isPremium      Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  role           Role          @default(BUYER)
+  emailVerified  DateTime?
+  bio            String?
+  followerCount  Int           @default(0)
+  followingCount Int           @default(0)
+  website        String?
+  totalEarnings  Float         @default(0)
+  verified       Boolean       @default(false)
+  accounts       Account[]
+  carts          Cart?
+  comments       Comment[]
+  favorites      Favorite[]
+  following      Follow[]      @relation("UserFollowing")
+  followers      Follow[]      @relation("UserFollowers")
+  likes          Like[]
+  prompts        Prompt[]
+  purchases      Purchase[]
+  ratings        Rating[]
+  savedPrompts   SavedPrompt[]
+  sessions       Session[]
 }
 
 model Account {
@@ -32,15 +44,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -62,22 +73,45 @@ model VerificationToken {
 }
 
 model Prompt {
-  id          String       @id @default(cuid())
-  slug        String       @unique
-  title       String
-  content     String
-  category    String
-  price       Float?
-  isPrivate   Boolean      @default(false)
-  userId      String
-  createdAt   DateTime     @default(now())
-  isSellable  Boolean      @default(false)
-  typeId      String
-  comments    Comment[]
-  favorites   Favorite[]
-  type        PromptType   @relation("PromptToType", fields: [typeId], references: [id])
-  user        User         @relation(fields: [userId], references: [id])
-  promptTypes PromptType[] @relation("PromptToPromptTypes")
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  title         String
+  content       String
+  category      String
+  price         Float         @default(0)
+  isPrivate     Boolean       @default(false)
+  userId        String
+  createdAt     DateTime      @default(now())
+  isSellable    Boolean       @default(false)
+  typeId        String
+  averageRating Float         @default(0)
+  commentCount  Int           @default(0)
+  description   String?
+  isFeatured    Boolean       @default(false)
+  likeCount     Int           @default(0)
+  ratingCount   Int           @default(0)
+  saveCount     Int           @default(0)
+  tags          String[]
+  updatedAt     DateTime      @updatedAt
+  viewCount     Int           @default(0)
+  domain        String
+  license       String        @default("Commercial Use Allowed")
+  sampleOutput  String?
+  skillLevel    SkillLevel    @default(BEGINNER)
+  status        PromptStatus  @default(DRAFT)
+  template      String
+  cartItems     CartItem[]
+  comments      Comment[]
+  favorites     Favorite[]
+  likes         Like[]
+  models        Model[]
+  parameters    Parameter[]
+  type          PromptType    @relation("PromptToType", fields: [typeId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+  purchases     Purchase[]
+  ratings       Rating[]
+  savedPrompts  SavedPrompt[]
+  promptTypes   PromptType[]  @relation("PromptToPromptTypes")
 }
 
 model PromptType {
@@ -109,7 +143,144 @@ model Favorite {
   user      User     @relation(fields: [userId], references: [id])
 }
 
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  promptId  String
+  createdAt DateTime @default(now())
+  prompt    Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, promptId])
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  userId    String
+  promptId  String
+  rating    Int
+  review    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  prompt    Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, promptId])
+}
+
+model SavedPrompt {
+  id        String   @id @default(cuid())
+  userId    String
+  promptId  String
+  createdAt DateTime @default(now())
+  prompt    Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, promptId])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+}
+
+model Purchase {
+  id            String        @id @default(cuid())
+  userId        String
+  promptId      String
+  amount        Float
+  createdAt     DateTime      @default(now())
+  paymentMethod String        @default("paystack")
+  paymentStatus PaymentStatus @default(PENDING)
+  transactionId String?
+  prompt        Prompt        @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, promptId])
+}
+
+model Parameter {
+  id          String        @id @default(cuid())
+  promptId    String
+  name        String
+  type        ParameterType
+  description String
+  required    Boolean       @default(true)
+  placeholder String?
+  options     String[]      @default([])
+  createdAt   DateTime      @default(now())
+  prompt      Prompt        @relation(fields: [promptId], references: [id], onDelete: Cascade)
+}
+
+model Model {
+  id          String   @id @default(cuid())
+  promptId    String
+  name        String
+  provider    String
+  efficiency  Int
+  recommended Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  prompt      Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  promptId  String
+  createdAt DateTime @default(now())
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  prompt    Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, promptId])
+}
+
 enum Role {
   ADMIN
-  PROMPTER
+  MANAGER
+  CREATOR
+  BUYER
+  MODERATOR
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum ParameterType {
+  TEXT
+  NUMBER
+  SELECT
+  TEXTAREA
+}
+
+enum PromptStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  PUBLISHED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
 }

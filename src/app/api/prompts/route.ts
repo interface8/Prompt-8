@@ -12,20 +12,82 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const data = await req.json();
+  const body = (await req.json()) as {
+    title: string;
+    content: string;
+    userId: string;
+    category: string;
+    domain: string;
+    template: string;
+    typeId?: string;
+    slug?: string;
+    price?: number;
+    isPrivate?: boolean;
+  };
+
+  const {
+    title,
+    content,
+    userId,
+    category,
+    domain,
+    template,
+    typeId,
+    slug,
+    price,
+    isPrivate,
+  } = body;
+
+  // Validate required fields
+  if (!title || !content || !userId || !category || !domain || !template) {
+    return NextResponse.json(
+      { error: 'Missing required fields: title, content, userId, category, domain, template' },
+      { status: 400 }
+    );
+  }
+
+  // Generate slug from title using underscores
+  const generateSlugFromTitle = (t: string) =>
+    t
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '_')
+      .replace(/[^a-z0-9_]/g, '')
+      .replace(/_+/g, '_')
+      .replace(/^_+|_+$/g, '');
+
+  const generatedSlug = slug || generateSlugFromTitle(title);
+
+  // Get or create default prompt type if not provided
+  let promptTypeId = typeId;
+  if (!promptTypeId) {
+    const defaultType = await prisma.promptType.findFirst({
+      where: { name: domain },
+    });
+    
+    if (defaultType) {
+      promptTypeId = defaultType.id;
+    } else {
+      const newType = await prisma.promptType.create({
+        data: { name: domain },
+      });
+      promptTypeId = newType.id;
+    }
+  }
 
   const newPrompt = await prisma.prompt.create({
     data: {
-      title: data.title,
-      content: data.content,
-      slug: data.slug, // generate with slugify if needed
-      userId: data.userId,
-      category: data.category,
-      price: data.price,
-      isPrivate: data.isPrivate || false,
-      type: data.type, // ensure this is provided in the request body
-      user: { connect: { id: data.userId } } // connect user relation
-    }
+      title,
+      content,
+      slug: generatedSlug,
+      userId,
+      category,
+      domain,
+      template,
+      typeId: promptTypeId,
+      price: price ?? 0,
+      isPrivate: isPrivate ?? false,
+    },
   });
 
   return NextResponse.json(newPrompt);
