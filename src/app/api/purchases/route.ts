@@ -99,14 +99,6 @@ export async function POST(request: Request) {
           },
         });
 
-        // Update prompt purchase count
-        await prisma.prompt.update({
-          where: { id: promptData.id },
-          data: {
-            purchaseCount: { increment: 1 },
-          },
-        });
-
         // Update creator earnings
         await prisma.user.update({
           where: { id: promptData.userId },

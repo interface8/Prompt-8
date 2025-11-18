@@ -94,8 +94,8 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         // Assign role from user if available
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        token.role = (user as any).role || Role.PROMPTER;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any       
+        token.role = (user as any).role || Role.BUYER;
       }
       
       // Store OAuth account info
