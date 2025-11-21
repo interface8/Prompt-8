@@ -22,6 +22,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 export default function PromptDetailPage() {
   const params = useParams();
@@ -32,13 +34,17 @@ export default function PromptDetailPage() {
 
   if (!prompt) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-400 mb-4">Prompt not found</p>
-          <Link href="/">
-            <Button variant="outline" className="border-gray-700 text-gray-300">Back to Home</Button>
-          </Link>
+      <div className="min-h-screen bg-gray-950 flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-gray-400 mb-4">Prompt not found</p>
+            <Link href="/">
+              <Button variant="outline" className="border-gray-700 text-gray-300">Back to Home</Button>
+            </Link>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -63,32 +69,10 @@ export default function PromptDetailPage() {
   const recommendedModel = prompt.models.find(m => m.recommended);
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Header */}
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                PromptSearch
-              </Link>
-              <nav className="hidden md:flex space-x-6">
-                <Link href="/" className="text-gray-300 hover:text-indigo-400 transition-colors">
-                  Explore
-                </Link>
-                <Link href="/marketplace" className="text-gray-300 hover:text-indigo-400 transition-colors">
-                  Marketplace
-                </Link>
-                <Link href="/creator" className="text-gray-300 hover:text-indigo-400 transition-colors">
-                  Creator Studio
-                </Link>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-950 flex flex-col">
+      <Header />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Back Button */}
         <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-indigo-400 mb-6 transition-colors">
           <ArrowLeft className="w-4 h-4" />
@@ -487,6 +471,8 @@ export default function PromptDetailPage() {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }

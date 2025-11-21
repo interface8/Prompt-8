@@ -16,6 +16,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { domains, skillLevels } from '@/data/mockData';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 interface Parameter {
   name: string;
@@ -199,32 +201,10 @@ export default function CreatorStudio() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Header */}
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                PromptSearch
-              </Link>
-              <nav className="hidden md:flex space-x-6">
-                <Link href="/" className="text-gray-300 hover:text-indigo-400 transition-colors">
-                  Explore
-                </Link>
-                <Link href="/marketplace" className="text-gray-300 hover:text-indigo-400 transition-colors">
-                  Marketplace
-                </Link>
-                <Link href="/creator" className="text-indigo-400">
-                  Creator Studio
-                </Link>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-950 flex flex-col">
+      <Header />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
@@ -777,6 +757,8 @@ export default function CreatorStudio() {
           </div>
         )}
       </div>
+      
+      <Footer />
     </div>
   );
 }

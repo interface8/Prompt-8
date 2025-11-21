@@ -16,6 +16,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -50,45 +52,10 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Header */}
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                PromptSearch
-              </Link>
-              <nav className="hidden md:flex space-x-6">
-                <Link href="/" className="text-gray-300 hover:text-indigo-400 transition-colors">
-                  Explore
-                </Link>
-                <Link href="/marketplace" className="text-gray-300 hover:text-indigo-400 transition-colors">
-                  Marketplace
-                </Link>
-                <Link href="/creator" className="text-gray-300 hover:text-indigo-400 transition-colors">
-                  Creator Studio
-                </Link>
-              </nav>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <Link href="/creator">
-                <Button className="bg-indigo-600 hover:bg-indigo-700">
-                  Create Prompt
-                </Button>
-              </Link>
-              <Link href="/signin">
-                <Button variant="outline" className="border-gray-700 text-gray-300 hover:bg-gray-800">
-                  Sign In
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-950 flex flex-col">
+      <Header />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
@@ -233,7 +200,7 @@ export default function Home() {
         </div>
 
         {/* Prompts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredPrompts.map(prompt => (
             <PromptCard key={prompt.id} prompt={prompt} />
           ))}
@@ -257,6 +224,8 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      <Footer />
     </div>
   );
 }

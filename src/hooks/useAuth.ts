@@ -18,12 +18,12 @@ export function useAuth(type: 'signin' | 'signup') {
 
     try {
       if (provider === 'google') {
-        await signIn('google', { callbackUrl: '/' });
+        await signIn('google', { callbackUrl: '/feed' });
         return;
       }
 
       if (provider === 'github') {
-        await signIn('github', { callbackUrl: '/' });
+        await signIn('github', { callbackUrl: '/feed' });
         return;
       }
 
@@ -48,7 +48,7 @@ export function useAuth(type: 'signin' | 'signup') {
         });
 
         if (res?.error) throw new Error(res.error);
-        router.push('/');
+        router.push('/feed');
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

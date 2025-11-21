@@ -16,6 +16,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 export default function MarketplacePage() {
   const [cart, setCart] = useState<Prompt[]>([]);
@@ -51,138 +53,118 @@ export default function MarketplacePage() {
   const trending = prompts.filter(p => p.featured);
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Header */}
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                PromptSearch
-              </Link>
-              <nav className="hidden md:flex space-x-6">
-                <Link href="/" className="text-gray-300 hover:text-indigo-400 transition-colors">
-                  Explore
-                </Link>
-                <Link href="/marketplace" className="text-indigo-400">
-                  Marketplace
-                </Link>
-                <Link href="/creator" className="text-gray-300 hover:text-indigo-400 transition-colors">
-                  Creator Studio
-                </Link>
-              </nav>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" className="relative border-gray-700 text-gray-300">
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Cart
-                    {cart.length > 0 && (
-                      <Badge className="absolute -top-2 -right-2 bg-indigo-600">
-                        {cart.length}
-                      </Badge>
-                    )}
-                  </Button>
-                </SheetTrigger>
-                <SheetContent className="w-full sm:max-w-md bg-gray-900 border-gray-800">
-                  <SheetHeader>
-                    <SheetTitle className="text-gray-100">Shopping Cart ({cart.length})</SheetTitle>
-                  </SheetHeader>
-                  
-                  {cart.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full text-center">
-                      <ShoppingCart className="w-16 h-16 text-gray-600 mb-4" />
-                      <p className="text-gray-400">Your cart is empty</p>
-                      <p className="text-sm text-gray-500 mt-2">
-                        Browse prompts and add them to your cart
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col h-full">
-                      <div className="flex-1 overflow-y-auto py-4 space-y-4">
-                        {cart.map(prompt => (
-                          <Card key={prompt.id} className="border-gray-800 bg-gray-800">
-                            <CardContent className="p-4">
-                              <div className="flex items-start justify-between mb-2">
-                                <div className="flex-1">
-                                  <h3 className="text-sm font-medium text-gray-100 mb-1">{prompt.title}</h3>
-                                  <p className="text-xs text-gray-400">{prompt.domain}</p>
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => removeFromCart(prompt.id)}
-                                  className="text-gray-400 hover:text-gray-100"
-                                >
-                                  <X className="w-4 h-4" />
-                                </Button>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <Badge variant="outline" className="border-gray-700 text-gray-400">{prompt.category}</Badge>
-                                <p className="text-indigo-400 font-bold">${prompt.price}</p>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
+    <div className="min-h-screen bg-gray-950 flex flex-col">
+      <Header />
 
-                      <div className="border-t border-gray-800 pt-4 space-y-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-300">Subtotal</span>
-                          <span className="text-2xl font-bold text-indigo-400">${cartTotal.toFixed(2)}</span>
-                        </div>
-                        <Button className="w-full bg-indigo-600 hover:bg-indigo-700" size="lg" onClick={handleCheckout}>
-                          <CreditCard className="w-5 h-5 mr-2" />
-                          Proceed to Checkout
-                        </Button>
-                      </div>
-                    </div>
+      <div className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex justify-end mb-6">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="relative border-gray-700 text-gray-300">
+                  <ShoppingCart className="w-5 h-5 mr-2" />
+                  Cart
+                  {cart.length > 0 && (
+                    <Badge className="absolute -top-2 -right-2 bg-indigo-600">
+                      {cart.length}
+                    </Badge>
                   )}
-                </SheetContent>
-              </Sheet>
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full sm:max-w-md bg-gray-900 border-gray-800">
+                <SheetHeader>
+                  <SheetTitle className="text-gray-100">Shopping Cart ({cart.length})</SheetTitle>
+                </SheetHeader>
+
+                {cart.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-center">
+                    <ShoppingCart className="w-16 h-16 text-gray-600 mb-4" />
+                    <p className="text-gray-400">Your cart is empty</p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      Browse prompts and add them to your cart
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col h-full">
+                    <div className="flex-1 overflow-y-auto py-4 space-y-4">
+                      {cart.map(prompt => (
+                        <Card key={prompt.id} className="border-gray-800 bg-gray-800">
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between mb-2">
+                              <div className="flex-1">
+                                <h3 className="text-sm font-medium text-gray-100 mb-1">{prompt.title}</h3>
+                                <p className="text-xs text-gray-400">{prompt.domain}</p>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeFromCart(prompt.id)}
+                                className="text-gray-400 hover:text-gray-100"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <Badge variant="outline" className="border-gray-700 text-gray-400">{prompt.category}</Badge>
+                              <p className="text-indigo-400 font-bold">${prompt.price}</p>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+
+                    <div className="border-t border-gray-800 pt-4 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-300">Subtotal</span>
+                        <span className="text-2xl font-bold text-indigo-400">${cartTotal.toFixed(2)}</span>
+                      </div>
+                      <Button className="w-full bg-indigo-600 hover:bg-indigo-700" size="lg" onClick={handleCheckout}>
+                        <CreditCard className="w-5 h-5 mr-2" />
+                        Proceed to Checkout
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {/* Page Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-100 mb-2">Marketplace</h1>
+            <p className="text-gray-400">
+              Purchase high-quality prompts and start creating immediately
+            </p>
+          </div>
+
+          {/* Trending Section */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-100 mb-4">Trending Now</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {trending.map(prompt => (
+                <MarketplaceCard
+                  key={prompt.id}
+                  prompt={prompt}
+                  onAddToCart={addToCart}
+                  inCart={cart.some(p => p.id === prompt.id)}
+                />
+              ))}
             </div>
           </div>
-        </div>
-      </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-100 mb-2">Marketplace</h1>
-          <p className="text-gray-400">
-            Purchase high-quality prompts and start creating immediately
-          </p>
-        </div>
-
-        {/* Trending Section */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-100 mb-4">Trending Now</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {trending.map(prompt => (
-              <MarketplaceCard
-                key={prompt.id}
-                prompt={prompt}
-                onAddToCart={addToCart}
-                inCart={cart.some(p => p.id === prompt.id)}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Top Sellers */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-100 mb-4">Top Sellers</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {topSellers.map(prompt => (
-              <MarketplaceCard
-                key={prompt.id}
-                prompt={prompt}
-                onAddToCart={addToCart}
-                inCart={cart.some(p => p.id === prompt.id)}
-              />
-            ))}
+          {/* Top Sellers */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-100 mb-4">Top Sellers</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {topSellers.map(prompt => (
+                <MarketplaceCard
+                  key={prompt.id}
+                  prompt={prompt}
+                  onAddToCart={addToCart}
+                  inCart={cart.some(p => p.id === prompt.id)}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -238,18 +220,18 @@ export default function MarketplacePage() {
                         <Lock className="w-5 h-5 text-blue-400 mt-0.5" />
                         <div>
                           <p className="text-sm text-blue-300">
-                            This is a demo. In production, this would integrate with Paystack 
+                            This is a demo. In production, this would integrate with Paystack
                             for secure payment processing.
                           </p>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm text-gray-300 mb-2">Card Number</label>
                       <Input placeholder="4242 4242 4242 4242" className="bg-gray-800 border-gray-700 text-gray-100" />
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm text-gray-300 mb-2">Expiry Date</label>
@@ -290,6 +272,8 @@ export default function MarketplacePage() {
           </Card>
         </div>
       )}
+
+      <Footer />
     </div>
   );
 }
