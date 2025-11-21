@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { 
-  ArrowLeft, Star, ShoppingCart, Heart, Share2, CheckCircle, 
+import {
+  ArrowLeft, Star, ShoppingCart, Heart, Share2, CheckCircle,
   AlertCircle, TrendingUp, Copy
 } from 'lucide-react';
+import Image from 'next/image';
 import { prompts } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -324,10 +325,12 @@ export default function PromptDetailPage() {
                   <Card key={idx} className="border-2 border-gray-800 bg-gray-900">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <img
+                        <Image
                           src={review.avatar}
                           alt={review.author}
-                          className="w-10 h-10 rounded-full"
+                          width={40}
+                          height={40}
+                          className="rounded-full"
                         />
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
@@ -442,10 +445,12 @@ export default function PromptDetailPage() {
               <CardContent className="p-6">
                 <h3 className="text-sm text-gray-400 mb-4">Created by</h3>
                 <div className="flex items-center gap-3 mb-4">
-                  <img
+                  <Image
                     src={prompt.creator.avatar}
                     alt={prompt.creator.name}
-                    className="w-12 h-12 rounded-full"
+                    width={48}
+                    height={48}
+                    className="rounded-full"
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">

@@ -2,6 +2,7 @@
 
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function GitHubOAuthTest() {
   const { data: session, status } = useSession();
@@ -46,10 +47,12 @@ export default function GitHubOAuthTest() {
               <p><strong>Role:</strong> {session.user?.role || 'Not available'}</p>
             </div>
             {session.user?.image && (
-              <img 
-                src={session.user.image} 
-                alt="Profile" 
-                className="w-12 h-12 rounded-full mt-2"
+              <Image
+                src={session.user.image}
+                alt="Profile"
+                width={48}
+                height={48}
+                className="rounded-full mt-2"
               />
             )}
           </div>

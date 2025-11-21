@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ShoppingCart, X, CheckCircle, CreditCard, Lock } from 'lucide-react';
+import Image from 'next/image';
 import { prompts, type Prompt } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -335,10 +336,12 @@ function MarketplaceCard({ prompt, onAddToCart, inCart }: MarketplaceCardProps) 
 
           {/* Creator */}
           <div className="flex items-center gap-2 mb-3">
-            <img
+            <Image
               src={prompt.creator.avatar}
               alt={prompt.creator.name}
-              className="w-6 h-6 rounded-full"
+              width={24}
+              height={24}
+              className="rounded-full"
             />
             <span className="text-sm text-gray-400">{prompt.creator.name}</span>
           </div>

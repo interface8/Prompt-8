@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns';
 
 interface User {
@@ -117,10 +118,12 @@ export default function PromptCard({
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
             {prompt.user.image ? (
-              <img 
-                src={prompt.user.image} 
-                alt={prompt.user.name || 'User'} 
-                className="w-10 h-10 rounded-full object-cover"
+              <Image
+                src={prompt.user.image}
+                alt={prompt.user.name || 'User'}
+                width={40}
+                height={40}
+                className="rounded-full object-cover"
               />
             ) : (
               prompt.user.name?.[0] || 'U'

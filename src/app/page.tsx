@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search, Filter, Star, ShoppingCart, TrendingUp, Sparkles } from 'lucide-react';
 import { prompts, domains, skillLevels, type Prompt } from '@/data/mockData';
 import { Input } from '@/components/ui/input';
@@ -336,10 +337,12 @@ function PromptCard({ prompt }: { prompt: Prompt }) {
           {/* Footer */}
           <div className="flex items-center justify-between pt-4 border-t border-gray-800">
             <div className="flex items-center gap-2">
-              <img
+              <Image
                 src={prompt.creator.avatar}
                 alt={prompt.creator.name}
-                className="w-6 h-6 rounded-full"
+                width={24}
+                height={24}
+                className="rounded-full"
               />
               <span className="text-sm text-gray-400">{prompt.creator.name}</span>
             </div>
