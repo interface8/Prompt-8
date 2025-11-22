@@ -14,7 +14,15 @@ type AuthFormProps = {
 export default function AuthForm({ type }: AuthFormProps) {
   const isSignIn = type === "signin";
   const { loading, error, handleAuth } = useAuth(type);
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ 
+    name: "", 
+    email: "", 
+    password: "",
+    profession: "",
+    age: "",
+    profilePicture: "",
+    referralSource: ""
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,17 +33,72 @@ export default function AuthForm({ type }: AuthFormProps) {
     <div className="space-y-6">
       <form onSubmit={handleSubmit} className="space-y-4">
         {!isSignIn && (
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-gray-300">Full Name</Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="John Doe"
-              className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500"
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              required
-            />
-          </div>
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-gray-300">Full Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500"
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                required
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="profession" className="text-gray-300">Profession</Label>
+                <Input
+                  id="profession"
+                  type="text"
+                  placeholder="e.g. AI Engineer"
+                  className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500"
+                  onChange={(e) => setForm({ ...form, profession: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="age" className="text-gray-300">Age</Label>
+                <Input
+                  id="age"
+                  type="number"
+                  placeholder="25"
+                  min="13"
+                  max="120"
+                  className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500"
+                  onChange={(e) => setForm({ ...form, age: e.target.value })}
+                  required
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="profilePicture" className="text-gray-300">Profile Picture URL (Optional)</Label>
+              <Input
+                id="profilePicture"
+                type="url"
+                placeholder="https://example.com/your-photo.jpg"
+                className="bg-gray-800 border-gray-700 text-gray-100 placeholder:text-gray-500 focus:border-indigo-500 focus:ring-indigo-500"
+                onChange={(e) => setForm({ ...form, profilePicture: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="referralSource" className="text-gray-300">How did you hear about us?</Label>
+              <select
+                id="referralSource"
+                className="w-full h-10 px-3 rounded-md bg-gray-800 border border-gray-700 text-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                onChange={(e) => setForm({ ...form, referralSource: e.target.value })}
+                required
+              >
+                <option value="">Select an option</option>
+                <option value="search">Search Engine (Google, Bing, etc.)</option>
+                <option value="social">Social Media</option>
+                <option value="friend">Friend or Colleague</option>
+                <option value="blog">Blog or Article</option>
+                <option value="ad">Advertisement</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </>
         )}
         <div className="space-y-2">
           <Label htmlFor="email" className="text-gray-300">Email</Label>

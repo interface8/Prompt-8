@@ -20,6 +20,7 @@ export default function FeedPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('foryou');
   const [newPrompt, setNewPrompt] = useState('');
+  const [posts, setPosts] = useState<any[]>([]);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -39,31 +40,67 @@ export default function FeedPage() {
     return null;
   }
 
-  // Mock feed items based on prompts data
-  const feedItems = prompts.slice(0, 10).map(prompt => ({
-    id: prompt.id,
-    type: 'prompt' as const,
-    author: {
-      name: prompt.creator.name,
-      avatar: prompt.creator.avatar,
-      verified: prompt.creator.verified,
-    },
-    timestamp: new Date(prompt.createdAt).toISOString(),
-    content: prompt.description,
-    prompt: {
-      title: prompt.title,
-      domain: prompt.domain,
-      category: prompt.category,
-      preview: prompt.description.substring(0, 200),
-    },
-    stats: {
-      likes: prompt.purchaseCount,
-      comments: prompt.reviewCount,
-      shares: Math.floor(prompt.purchaseCount / 2),
-    },
-    isLiked: false,
-    isBookmarked: false,
-  }));
+  // Handle post creation
+  const handleCreatePost = () => {
+    if (!newPrompt.trim()) return;
+    
+    const newPost = {
+      id: `post-${Date.now()}`,
+      type: 'post' as const,
+      author: {
+        name: session.user?.name || 'Anonymous',
+        avatar: session.user?.image || 'https://ui-avatars.com/api/?name=User',
+        verified: false,
+      },
+      timestamp: new Date().toISOString(),
+      content: newPrompt,
+      prompt: {
+        title: 'New Post',
+        domain: 'General',
+        category: 'Discussion',
+        preview: newPrompt.substring(0, 200),
+      },
+      stats: {
+        likes: 0,
+        comments: 0,
+        shares: 0,
+      },
+      isLiked: false,
+      isBookmarked: false,
+    };
+    
+    setPosts([newPost, ...posts]);
+    setNewPrompt('');
+  };
+
+  // Mock feed items based on prompts data + user posts
+  const feedItems = [
+    ...posts,
+    ...prompts.slice(0, 10).map(prompt => ({
+      id: prompt.id,
+      type: 'prompt' as const,
+      author: {
+        name: prompt.creator.name,
+        avatar: prompt.creator.avatar,
+        verified: prompt.creator.verified,
+      },
+      timestamp: new Date(prompt.createdAt).toISOString(),
+      content: prompt.description,
+      prompt: {
+        title: prompt.title,
+        domain: prompt.domain,
+        category: prompt.category,
+        preview: prompt.description.substring(0, 200),
+      },
+      stats: {
+        likes: prompt.purchaseCount,
+        comments: prompt.reviewCount,
+        shares: Math.floor(prompt.purchaseCount / 2),
+      },
+      isLiked: false,
+      isBookmarked: false,
+    }))
+  ];
 
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col">
@@ -165,7 +202,12 @@ export default function FeedPage() {
                           Discussion
                         </Badge>
                       </div>
-                      <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 text-sm">
+                      <Button 
+                        size="sm" 
+                        className="bg-indigo-600 hover:bg-indigo-700 text-sm"
+                        onClick={handleCreatePost}
+                        disabled={!newPrompt.trim()}
+                      >
                         Post
                       </Button>
                     </div>

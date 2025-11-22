@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { email, password, name } = await req.json();
+  const { email, password, name, profession, age, profilePicture, referralSource } = await req.json();
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
@@ -17,6 +17,8 @@ export async function POST(req: Request) {
       email,
       name,
       password: hashedPassword,
+      image: profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=6366f1&color=fff`,
+      bio: profession ? `${profession} | Age ${age}` : null,
     },
   });
 

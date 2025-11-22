@@ -21,7 +21,7 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center space-x-8">
             <Link href="/" className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              PromptSearch
+              Prompt - 8
             </Link>
             
             {/* Desktop Navigation */}

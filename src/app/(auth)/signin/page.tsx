@@ -10,7 +10,7 @@ export default function SignInPage() {
         <div>
           <Link href="/" className="text-3xl font-bold text-white flex items-center gap-2">
             <Sparkles className="w-8 h-8" />
-            PromptSearch
+            Prompt-8
           </Link>
         </div>
         <div className="space-y-6">
@@ -38,7 +38,7 @@ export default function SignInPage() {
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">
             <Link href="/" className="lg:hidden text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent inline-block mb-8">
-              PromptSearch
+              Prompt-8
             </Link>
             <h2 className="text-3xl font-bold text-gray-100 mb-2">Welcome Back</h2>
             <p className="text-gray-400">Sign in to continue to your feed</p>

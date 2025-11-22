@@ -107,13 +107,13 @@ export default function Home() {
         </div>
 
         {/* Filters */}
-        <div className="bg-gray-900 rounded-xl border-2 border-gray-800 p-6 mb-8">
+        <div className="bg-gray-900 rounded-xl border-2 border-gray-800 p-4 sm:p-6 mb-8 overflow-x-hidden">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="w-5 h-5 text-gray-400" />
             <span className="text-gray-300 font-medium">Filters</span>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm text-gray-400 mb-2">Domain</label>
               <Select value={selectedDomain} onValueChange={setSelectedDomain}>
